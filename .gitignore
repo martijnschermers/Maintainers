@@ -1,0 +1,30 @@
+# Build output
+bin/
+obj/
+out/
+
+# Visual Studio / VS Code
+.vs/
+.vscode/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# ASP.NET / .NET
+*.cache
+*.log
+*.tmp
+*.temp
+*.nupkg
+packages/
+TestResults/
+
+# Local configuration and secrets
+appsettings.Development.json
+appsettings.*.Local.json
+secrets.json
+
+# OS files
+.DS_Store
+Thumbs.db
