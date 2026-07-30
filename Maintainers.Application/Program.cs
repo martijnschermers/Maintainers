@@ -1,4 +1,4 @@
-using Maintainers.Components;
+using Maintainers.Application.Components;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor.Services;
 
@@ -9,7 +9,7 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 builder.Services.AddMudServices();
 
-builder.Services.AddDbContextFactory<VehicleContext>(options =>
+builder.Services.AddDbContextFactory<DomainDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("Domain")));
 
 var app = builder.Build();
