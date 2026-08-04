@@ -1,4 +1,4 @@
-using Maintainers.Application.Components;
+using Maintainers.Components;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor.Services;
 
