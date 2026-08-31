@@ -5,28 +5,21 @@
 
 <h1>Vehicles</h1>
 
-<MudGrid>
-    <MudItem xs="12" sm="7">
-        <MudPaper Class="pa-4">
-            <MudForm @ref="_form" @bind-IsValid="@_success" @bind-Errors="@_errors" OnEnterPressed="@(() => _form.ValidateAsync())">
-                <MudTextField T="string" Label="Vehicle" Required="true" RequiredError="Vehicle is required!" />
-                <MudDatePicker T="DateTime?" Label="Purchase Date" Required="true" RequiredError="Purchase date is required!" />
-                <div class="d-flex">
-                    <MudRadioGroup T="string" Required="true" RequiredError="Vehicle type is required!">
-                        <MudRadio Value="@("Car")">Car</MudRadio>
-                        <MudRadio Value="@("Truck")">Truck</MudRadio>
-                        <MudRadio Value="@("Motorcycle")">Motorcycle</MudRadio>
-                        <MudRadio Value="@("Scooter")">Scooter/Moped</MudRadio>
-                        <MudRadio Value="@("Other")">Other</MudRadio>
-                    </MudRadioGroup>
-                </div>
-                <div class="d-flex align-center justify-space-between">
-                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!_success)" Class="ml-auto">Add Vehicle</MudButton>
-                </div>
-            </MudForm>
-        </MudPaper>
-    </MudItem>
-</MudGrid>
+<form @onsubmit="AddVehicle">
+    <div>
+        <label for="model">Model</label>
+        <input type="text" id="model" name="model" @bind="newVehicleModel" />
+    </div>
+    <div>
+        <label for="year">Year</label>
+        <input type="number" id="year" name="year" @bind="newVehicleYear" />
+    </div>
+    <div>
+        <label for="make">Make</label>
+        <input type="text" id="make" name="make" @bind="newVehicleMake" />
+    </div>
+    <button type="button" @onclick="AddVehicle">Add Vehicle</button>
+</form>
 
 
 @if (vehicles.Count == 0)
@@ -53,7 +46,8 @@ else
                         <td>@vehicle.Year</td>
                         <td>@vehicle.Make</td>
                         <td>
-                            <button class="btn btn-danger btn-sm" @onclick="() => RemoveVehicle(vehicle.Id)">Remove</button>
+                            <button class="btn btn-danger btn-sm"
+                                    @onclick="() => RemoveVehicle(vehicle.VehicleId)">Remove</button>
                         </td>
                     </tr>
                 }
@@ -63,9 +57,6 @@ else
 }
 
 @code {
-    private bool _success;
-    private MudForm _form;
-    private string _password;
     private string[] _errors = [];
 
     private List<Vehicle> vehicles = new();
@@ -83,7 +74,7 @@ else
 
         vehicles.Add(new Vehicle
         {
-            Id = vehicleIdCounter++,
+            VehicleId = vehicleIdCounter++,
             Model = newVehicleModel,
             Year = newVehicleYear,
             Make = newVehicleMake
@@ -96,14 +87,6 @@ else
 
     private void RemoveVehicle(int id)
     {
-        vehicles.RemoveAll(v => v.Id == id);
-    }
-
-    private class Vehicle
-    {
-        public int Id { get; set; }
-        public string Model { get; set; } = "";
-        public int Year { get; set; }
-        public string Make { get; set; } = "";
+        vehicles.RemoveAll(v => v.VehicleId == id);
     }
 }
