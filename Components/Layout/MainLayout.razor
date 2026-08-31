@@ -1,28 +1,47 @@
 ﻿@inherits LayoutComponentBase
 
-<MudThemeProvider @bind-IsDarkMode="_isDarkMode" />
-<MudPopoverProvider />
-<MudDialogProvider />
-<MudSnackbarProvider />
+<header class="container">
+    <nav>
+        <ul>
+            <li>
+                <strong>Maintainers</strong>
+            </li>
+        </ul>
 
-<MudLayout>
-    <MudAppBar Color="Color.Primary" Fixed="false">
-        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" />
-        <MudSpacer />
-        <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Color="Color.Inherit" />
-    </MudAppBar>
+        <ul>
+            <li>
+                <NavLink href="/" Match="NavLinkMatch.All">
+                    Dashboard
+                </NavLink>
+            </li>
 
-    <MudMainContent>
-        @Body
-    </MudMainContent>
-</MudLayout>
+            <li>
+                <NavLink href="/vehicles">
+                    Vehicles
+                </NavLink>
+            </li>
 
-@code {
-    private bool _isDarkMode = true;
-}
+            <li>
+                <NavLink href="/maintenance">
+                    Maintenance
+                </NavLink>
+            </li>
 
-<div id="blazor-error-ui" data-nosnippet>
-    An unhandled error has occurred.
-    <a href="." class="reload">Reload</a>
-    <span class="dismiss">🗙</span>
-</div>
+            <li>
+                <NavLink href="/register">
+                    Register
+                </NavLink>
+            </li>
+        </ul>
+    </nav>
+</header>
+
+<main class="container">
+    @Body
+</main>
+
+<footer class="container">
+    <small>
+        © @DateTime.Now.Year Maintainers
+    </small>
+</footer>
