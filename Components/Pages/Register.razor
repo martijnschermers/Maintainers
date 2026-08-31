@@ -1,0 +1,83 @@
+@page "/register"
+@rendermode InteractiveServer
+@using System.Text.RegularExpressions;
+@using Maintainers.Models;
+
+
+
+<div class="register-form">
+  <EditForm Model="Registration" OnValidSubmit="HandleSubmit" FormName="RegisterForm">
+    <DataAnnotationsValidator />
+
+    <h1>Register</h1>
+
+    <div>
+      <label for="username">Username</label>
+      <InputText @bind-Value="Registration.Username" type="text" id="username" name="username" />
+      <ValidationMessage For="@(() => Registration.Username)" class="text-danger" />
+    </div>
+    <div>
+      <label for="email">Email</label>
+      <InputText @bind-Value="Registration.Email" type="email" id="email" name="email" />
+      <ValidationMessage For="@(() => Registration.Email)" class="text-danger" />
+    </div>
+    <div>
+      <label for="password">Password</label>
+      <InputText @bind-Value="Registration.Password" type="password" id="password" name="password" />
+      <ValidationMessage For="@(() => Registration.Password)" class="text-danger" />
+    </div>
+    <div>
+      <label for="confirmPassword">Confirm Password</label>
+      <InputText @bind-Value="Registration.ConfirmPassword" type="password" id="confirmPassword"
+                 name="confirmPassword" />
+      <ValidationMessage For="@(() => Registration.ConfirmPassword)" class="text-danger" />
+    </div>
+    <button type="submit">Register</button>
+  </EditForm>
+
+  @if (Submitted)
+  {
+    <div class="alert alert-success mt-3">
+      <p>Thank you, @Registration.Username! Your account has been created.</p>
+      <a href="/login">Login here!</a>
+    </div>
+  }
+</div>
+
+@code {
+  [Inject]
+  private IdentityService IdentityService { get; set; } = default!;
+
+  [SupplyParameterFromForm(FormName = "RegisterForm")]
+  private RegisterModel Registration { get; set; } = new RegisterModel();
+
+  private bool Submitted { get; set; } = false;
+
+  private async Task HandleSubmit()
+  {
+    Submitted = true;
+    Console.WriteLine($"Username: {Registration.Username}");
+    Console.WriteLine($"Email: {Registration.Email}");
+    Console.WriteLine($"Password: {Registration.Password}");
+    Console.WriteLine($"Confirm Password: {Registration.ConfirmPassword}");
+
+    await IdentityService.CreateUserAsync(Registration.Username, Registration.Email, Registration.Password);
+  }
+
+  private static IEnumerable<string> PasswordStrength(string pw)
+  {
+    if (string.IsNullOrWhiteSpace(pw))
+    {
+      yield return "Password is required!";
+      yield break;
+    }
+    if (pw.Length < 8)
+      yield return "Password must be at least of length 8";
+    if (!Regex.IsMatch(pw, @"[A-Z]"))
+      yield return "Password must contain at least one capital letter";
+    if (!Regex.IsMatch(pw, @"[a-z]"))
+      yield return "Password must contain at least one lowercase letter";
+    if (!Regex.IsMatch(pw, @"[0-9]"))
+      yield return "Password must contain at least one digit";
+  }
+}

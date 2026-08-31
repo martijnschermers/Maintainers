@@ -1,16 +1,24 @@
 using Maintainers.Components;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using MudBlazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
-builder.Services.AddMudServices();
+builder.Services.AddAuthorization();
 
 builder.Services.AddDbContextFactory<DomainDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("Domain")));
+
+builder.Services.AddDbContext<ApplicationDbContext>(
+    options => options.UseNpgsql(builder.Configuration.GetConnectionString("Identity")));
+
+builder.Services.AddIdentityApiEndpoints<IdentityUser>()
+.AddEntityFrameworkStores<ApplicationDbContext>();
+
+builder.Services.AddScoped<IdentityService>();
 
 var app = builder.Build();
 
@@ -29,5 +37,6 @@ app.UseAntiforgery();
 app.MapStaticAssets();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
+app.MapIdentityApi<IdentityUser>();
 
-app.Run();
+await app.RunAsync();
