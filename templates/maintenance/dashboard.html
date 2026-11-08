@@ -11,8 +11,8 @@
         <p class="mt-4 max-w-xl text-base leading-7 text-slate-400 sm:text-lg">Een helder dossier voor elke kilometer, klaar voor de volgende beurt.</p>
       </div>
       <div class="flex flex-wrap gap-3">
-        <a href="{% url 'maintenance:vehicle-create' %}" class="btn-primary">+ Voertuig toevoegen</a>
-        <a href="{% url 'maintenance:vehicle-list' %}" class="btn-secondary">Dossiers bekijken</a>
+        <a href="{% url 'maintenance:vehicle-create' %}" class="btn-primary inline-flex items-center gap-2"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path stroke-linecap="round" d="M12 5v14M5 12h14"/></svg>Voertuig toevoegen</a>
+        <a href="{% url 'maintenance:vehicle-list' %}" class="btn-secondary inline-flex items-center gap-2"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4 5h16v14H4zM8 9h8M8 13h5"/></svg>Dossiers bekijken</a>
       </div>
     </div>
   </div>
@@ -42,7 +42,7 @@
           <p class="text-xs font-bold uppercase tracking-widest text-slate-500">Live logboek</p>
           <h2 class="mt-1 break-words text-xl font-bold sm:text-2xl">Recente activiteit</h2>
         </div>
-        <a href="{% url 'maintenance:vehicle-list' %}" class="whitespace-nowrap text-sm font-semibold text-mint hover:text-emerald-300">Alle voertuigen <span aria-hidden="true">→</span></a>
+        <a href="{% url 'maintenance:vehicle-list' %}" class="inline-flex items-center gap-1 whitespace-nowrap text-sm font-semibold text-mint hover:text-emerald-300">Alle voertuigen <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m-6-6 6 6-6 6"/></svg></a>
       </div>
       {% for entry in recent_entries %}
       <div class="panel mb-3 flex min-w-0 items-center justify-between gap-4 overflow-hidden p-4 transition hover:border-emerald-300/40">

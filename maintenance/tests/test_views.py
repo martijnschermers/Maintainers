@@ -301,6 +301,18 @@ def test_theme_switch_is_available_on_all_pages(client):
     assert 'class="theme-toggle' in content
     assert "maintainers-theme" in content
     assert 'prefers-color-scheme: light' in content
+    assert "theme-icon-sun" in content
+    assert "theme-icon-moon" in content
+
+
+@pytest.mark.django_db
+def test_theme_switch_remains_available_for_authenticated_users(client, user):
+    client.force_login(user)
+
+    content = client.get(reverse("maintenance:dashboard")).content.decode()
+
+    assert 'class="theme-toggle' in content
+    assert "theme-icon-moon" in content
 
 
 @pytest.mark.django_db
@@ -376,6 +388,7 @@ def test_allauth_login_page_exposes_google_and_apple(client):
     content = response.content.decode()
     assert response.status_code == 200
     assert "accounts/google/login/" in content
+    assert 'fill="#4285F4"' in content
     assert "accounts/apple/login/" in content
     assert reverse("account_signup") in content
     assert reverse("account_reset_password") in content
@@ -411,6 +424,10 @@ def test_allauth_signup_page_uses_the_styled_template(client):
     assert "Account maken" in content
     assert "bg-mint" in content
     assert 'name="username"' in content
+    assert 'name="password2"' in content
+    assert 'minlength="8"' in content
+    assert 'type="email"' in content
+    assert "signup-field-message" not in content
 
 
 @pytest.mark.django_db
@@ -610,6 +627,47 @@ def test_signup_uses_local_console_email_backend(client, settings):
     assert get_user_model().objects.filter(username="new-user").exists()
     assert len(mail.outbox) == 1
     assert "new-user@example.com" in mail.outbox[0].to
+
+
+@pytest.mark.django_db
+def test_signup_messages_are_combined_into_one_alert(client, settings):
+    settings.EMAIL_BACKEND = "django.core.mail.backends.locmem.EmailBackend"
+    response = client.post(
+        reverse("account_signup"),
+        {
+            "username": "combined-message-user",
+            "email": "combined@example.com",
+            "password1": "Strong-test-password-123!",
+            "password2": "Strong-test-password-123!",
+        },
+        follow=True,
+    )
+
+    content = response.content.decode()
+    assert response.status_code == 200
+    assert "combined@example.com" in content
+    assert "combined-message-user" in content
+    assert content.count("border-emerald-400/30") == 1
+
+
+@pytest.mark.django_db
+def test_signup_keeps_password_when_confirmation_is_invalid(client):
+    response = client.post(
+        reverse("account_signup"),
+        {
+            "username": "invalid-confirmation-user",
+            "email": "invalid-confirmation@example.com",
+            "password1": "Strong-test-password-123!",
+            "password2": "Different-password-123!",
+        },
+    )
+
+    content = response.content.decode()
+    assert response.status_code == 200
+    assert 'name="password1"' in content
+    assert 'value="Strong-test-password-123!"' in content
+    assert 'name="password2"' in content
+    assert 'value="Different-password-123!"' not in content
 
 
 @pytest.mark.django_db
