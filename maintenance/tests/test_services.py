@@ -41,7 +41,7 @@ def test_maintenance_reminders_use_latest_category_interval(user, vehicle):
 
     reminders = build_maintenance_reminders(entries, current_odometer=250000, today=date(2025, 8, 1))
 
-    assert reminders[0]["category"] == "Olie en vloeistoffen"
+    assert reminders[0]["category"] == "Oliebeurt"
     assert reminders[0]["due_date"] == date(2025, 12, 29)
     assert reminders[0]["due_odometer"] == 250000
     assert reminders[0]["status"] == "due"
