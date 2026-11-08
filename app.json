@@ -1,0 +1,22 @@
+{
+  "name": "maintainers",
+  "description": "Het onderhoudsdossier dat bij het voertuig blijft.",
+  "scripts": {
+    "dokku": {
+      "postdeploy": "python manage.py migrate --noinput"
+    }
+  },
+  "healthchecks": {
+    "web": [
+      {
+        "type": "startup",
+        "name": "web",
+        "description": "Django web process is running",
+        "path": "/health/",
+        "attempts": 5,
+        "wait": 5,
+        "content": "ok"
+      }
+    ]
+  }
+}

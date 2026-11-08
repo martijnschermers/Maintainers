@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Pagina niet gevonden · Maintainers{% endblock %}
+{% block content %}
+<section class="mx-auto flex max-w-2xl flex-col items-center px-6 py-24 text-center sm:py-32">
+  <p class="text-8xl font-black tracking-tighter text-mint/80">404</p>
+  <p class="mt-8 text-sm font-semibold uppercase tracking-[.25em] text-mint">Verdwaald in het dossier</p>
+  <h1 class="mt-4 text-4xl font-black tracking-tight sm:text-5xl">Deze pagina bestaat niet.</h1>
+  <p class="mt-5 max-w-lg text-lg leading-8 text-slate-400">
+    De link is verouderd, de pagina is verplaatst of het adres bevat een typefout.
+  </p>
+  <div class="mt-10 flex flex-wrap justify-center gap-3">
+    <a href="{% url 'maintenance:home' %}" class="rounded-xl bg-mint px-6 py-3 font-bold text-slate-950 transition hover:bg-emerald-300">
+      Naar de homepage
+    </a>
+    {% if user.is_authenticated %}
+      <a href="{% url 'maintenance:dashboard' %}" class="rounded-xl border border-slate-700 px-6 py-3 font-semibold transition hover:border-slate-500">
+        Naar dashboard
+      </a>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

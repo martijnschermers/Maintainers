@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}Authenticatie mislukt · Maintainers{% endblock %}
+{% block content %}
+<section class="mx-auto max-w-md px-6 py-20">
+  <div class="rounded-2xl border border-rose-400/20 bg-slate-900 p-8 text-center shadow-2xl shadow-black/20">
+    <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-rose-400/10 text-2xl text-rose-300">!</div>
+    <h1 class="mt-6 text-3xl font-black">Authenticatie mislukt</h1>
+    <p class="mt-3 text-slate-400">Inloggen via de externe provider is niet gelukt. Probeer het opnieuw of gebruik je e-mailadres.</p>
+    <a href="{% url 'account_login' %}" class="mt-8 inline-block w-full rounded-xl bg-mint px-5 py-3 font-bold text-slate-950 transition hover:bg-emerald-300">Terug naar inloggen</a>
+  </div>
+</section>
+{% endblock %}

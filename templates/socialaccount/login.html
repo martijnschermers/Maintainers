@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}Doorgaan met {{ provider.name }} · Maintainers{% endblock %}
+{% block content %}
+<section class="mx-auto max-w-md px-6 py-20">
+  <div class="rounded-2xl border border-slate-800 bg-slate-900 p-8 text-center shadow-2xl shadow-black/20">
+    <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-800 text-2xl font-black">{{ provider.name|slice:":1" }}</div>
+    <p class="mt-6 text-sm font-semibold uppercase tracking-widest text-mint">Beveiligde login</p>
+    <h1 class="mt-3 text-3xl font-black">Doorgaan met {{ provider.name }}</h1>
+    <p class="mt-3 text-slate-400">Je wordt doorgestuurd naar {{ provider.name }} om veilig in te loggen.</p>
+    <form method="post" class="mt-8">{% csrf_token %}<button class="w-full rounded-xl bg-mint px-5 py-3 font-bold text-slate-950 transition hover:bg-emerald-300">Doorgaan</button></form>
+    <a href="{% url 'account_login' %}" class="mt-5 inline-block text-sm text-slate-400 hover:text-white">Annuleren</a>
+  </div>
+</section>
+{% endblock %}
