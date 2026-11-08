@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Maintainers · Onderhoud dat meegaat{% endblock %}
+{% block meta_description %}Bewaar onderhoud, onderdelen en bewijs in één betrouwbaar en overdraagbaar voertuigdossier met Maintainers.{% endblock %}
+{% block og_description %}Bewaar onderhoud, onderdelen en bewijs in één betrouwbaar en overdraagbaar voertuigdossier.{% endblock %}
+{% block structured_data %}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Maintainers",
+      "description": "Een betrouwbaar en overdraagbaar onderhoudsdossier voor elk voertuig.",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Web"
+    }
+  </script>
+{% endblock %}
+{% block content %}
+<section class="mx-auto max-w-7xl px-6 py-20 lg:py-32">
+  <div class="grid items-center gap-16 lg:grid-cols-[1.15fr_.85fr] lg:gap-20">
+    <div class="max-w-3xl">
+      <p class="mb-5 text-sm font-bold uppercase tracking-[.25em] text-mint">Onderhoud dat meegaat</p>
+      <h1 class="text-5xl font-black leading-[1.05] tracking-tight sm:text-7xl">Een betrouwbaar dossier voor elke kilometer.</h1>
+      <p class="mt-7 max-w-2xl text-lg leading-8 text-slate-400">Leg onderhoud, onderdelen en bewijs vast in één overdraagbaar voertuigdossier. Voor jezelf, en voor de volgende eigenaar.</p>
+      <div class="mt-10 flex flex-wrap items-center gap-4">
+        <a href="{% url 'account_login' %}" class="btn-primary px-6 py-3">Start je dossier</a>
+        <a href="#waarom" class="btn-secondary px-6 py-3">Ontdek de voordelen <span class="ml-2" aria-hidden="true">↓</span></a>
+      </div>
+      <p class="mt-5 text-sm text-slate-500">Gratis starten · Geen creditcard nodig</p>
+    </div>
+    <div class="panel technical-grid relative p-6 sm:p-8">
+      <div class="mb-8 flex items-center justify-between border-b border-slate-700 pb-4">
+        <div><p class="text-xs font-bold uppercase tracking-widest text-slate-500">Jouw garage journal</p><p class="mt-1 font-bold">Volkswagen Golf</p></div>
+        <span class="rounded-full bg-mint/10 px-3 py-1 text-xs font-bold text-mint">Actief</span>
+      </div>
+      <div class="space-y-4">
+        <div class="rounded-xl border border-slate-700 bg-slate-900/80 p-4"><div class="flex items-center justify-between gap-4"><span class="text-sm font-semibold">Olie en filter vervangen</span><span class="text-xs text-slate-500">Vandaag</span></div><p class="mt-2 text-sm text-slate-400">Onderhoud vastgelegd · 142.860 km</p></div>
+        <div class="rounded-xl border border-slate-700 bg-slate-900/80 p-4"><div class="flex items-center justify-between gap-4"><span class="text-sm font-semibold">APK goedgekeurd</span><span class="text-xs text-slate-500">12 mrt</span></div><p class="mt-2 text-sm text-slate-400">Bewijs toegevoegd · € 38,50</p></div>
+      </div>
+      <div class="mt-6 flex items-center gap-3 text-sm text-slate-400"><span class="flex h-8 w-8 items-center justify-center rounded-full bg-mint/10 text-mint" aria-hidden="true">✓</span> Alles overzichtelijk op één plek</div>
+    </div>
+  </div>
+  <div id="waarom" class="mt-24 scroll-mt-8">
+    <div class="mb-8 max-w-xl"><p class="text-xs font-bold uppercase tracking-widest text-slate-500">Waarom Maintainers?</p><h2 class="mt-2 text-3xl font-black tracking-tight sm:text-4xl">Minder zoeken. Meer zekerheid.</h2></div>
+    <div class="grid gap-5 md:grid-cols-3">
+      <div class="rounded-2xl border border-slate-800 bg-slate-900 p-6"><div class="mb-8 flex h-10 w-10 items-center justify-center rounded-full bg-mint/10 text-xl text-mint" aria-hidden="true">✓</div><h3 class="text-xl font-bold">Betrouwbaar</h3><p class="mt-2 leading-7 text-slate-400">Een onveranderlijke tijdlijn en bewijs bij elke onderhoudsbeurt.</p></div>
+      <div class="rounded-2xl border border-slate-800 bg-slate-900 p-6"><div class="mb-8 flex h-10 w-10 items-center justify-center rounded-full bg-blue-400/10 text-xl text-blue-300" aria-hidden="true">↗</div><h3 class="text-xl font-bold">Overdraagbaar</h3><p class="mt-2 leading-7 text-slate-400">Geef het dossier mee aan een koper met één duidelijke link.</p></div>
+      <div class="rounded-2xl border border-slate-800 bg-slate-900 p-6"><div class="mb-8 flex h-10 w-10 items-center justify-center rounded-full bg-amber-400/10 text-xl text-amber-300" aria-hidden="true">◷</div><h3 class="text-xl font-bold">Snel vastgelegd</h3><p class="mt-2 leading-7 text-slate-400">Van olie tot grote reparatie: voeg onderhoud toe zonder administratie.</p></div>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,11 @@
+Django>=5.2,<6.0
+psycopg[binary]>=3.2,<4.0
+gunicorn>=23.0,<24.0
+whitenoise>=6.9,<7.0
+django-allauth>=65.0,<66.0
+requests>=2.32,<3.0
+google-cloud-documentai>=2.30,<3.0
+reportlab>=4.2,<5.0
+pytest>=8.3,<9.0
+pytest-django>=4.11,<5.0
+ruff>=0.9,<1.0

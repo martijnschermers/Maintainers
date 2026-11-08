@@ -1,0 +1,125 @@
+{% load static %}
+<!doctype html>
+<html lang="nl" class="h-full bg-slate-950">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="{% block meta_description %}Maintainers: het betrouwbare, overdraagbare onderhoudsdossier voor elk voertuig.{% endblock %}">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="{{ request.build_absolute_uri }}">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Maintainers">
+  <meta property="og:title" content="{% block og_title %}Maintainers · Onderhoud dat meegaat{% endblock %}">
+  <meta property="og:description" content="{% block og_description %}Leg onderhoud, onderdelen en bewijs vast in één overdraagbaar voertuigdossier.{% endblock %}">
+  <meta property="og:url" content="{{ request.build_absolute_uri }}">
+  <meta name="theme-color" content="#020617">
+  <script>
+    (() => {
+      let theme = null;
+      try {
+        theme = localStorage.getItem("maintainers-theme");
+      } catch (error) {
+        // Privacy settings can block localStorage; the system preference still works.
+      }
+      if (theme !== "light" && theme !== "dark") {
+        theme = window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+      }
+      document.documentElement.dataset.theme = theme;
+    })();
+  </script>
+  <link rel="stylesheet" href="{% static 'css/maintainers.css' %}">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: { extend: { colors: { ink: "#020617", mint: "#6ee7b7" } } }
+    }
+  </script>
+  <title>{% block title %}Maintainers{% endblock %}</title>
+  {% block structured_data %}{% endblock %}
+</head>
+<body class="min-h-full text-slate-100 antialiased">
+  <nav class="border-b border-slate-800 bg-slate-950/90 backdrop-blur">
+    <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-5">
+      <a href="{% url 'maintenance:home' %}" class="text-xl font-black tracking-tight">maintainers<span class="text-mint">.</span><span class="ml-2 hidden text-[10px] font-semibold uppercase tracking-[.25em] text-slate-600 sm:inline">garage journal</span></a>
+      <div class="flex items-center gap-3">
+        <button id="mobile-menu-button" type="button" class="rounded-lg border border-slate-700 p-2 text-slate-300 hover:border-mint hover:text-mint md:hidden" aria-controls="mobile-menu" aria-expanded="false" aria-label="Navigatiemenu openen">
+          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path stroke-linecap="round" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button>
+      </div>
+      <div class="hidden items-center gap-5 text-sm text-slate-300 md:flex">
+        {% if user.is_authenticated %}
+          <a class="hover:text-white" href="{% url 'maintenance:dashboard' %}">Dashboard</a>
+          <a class="hover:text-white" href="{% url 'maintenance:vehicle-list' %}">Voertuigen</a>
+          <form method="post" action="{% url 'account_logout' %}" class="inline">{% csrf_token %}<button class="hover:text-white">Uitloggen</button></form>
+        {% else %}
+          <div class="flex items-center gap-2 rounded-full border border-slate-700 p-1">
+            <button class="theme-toggle rounded-full p-2 text-slate-300 hover:bg-slate-800 hover:text-mint" type="button" aria-pressed="false" aria-label="Licht thema inschakelen">
+              <span class="theme-toggle-icon" aria-hidden="true">☀</span>
+            </button>
+            <a class="rounded-full bg-mint px-4 py-2 font-semibold text-slate-950 hover:bg-emerald-300" href="{% url 'account_login' %}">Inloggen</a>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+    <div id="mobile-menu" class="hidden border-t border-slate-800 px-6 py-4 md:hidden">
+      <div class="flex flex-col gap-2 text-sm text-slate-300">
+        <button class="theme-toggle flex w-full items-center rounded-lg px-3 py-3 text-left hover:bg-slate-900 hover:text-white" type="button" aria-pressed="false" aria-label="Licht thema inschakelen"><span class="theme-toggle-icon mr-2" aria-hidden="true">☀</span><span class="theme-toggle-label">Licht thema</span></button>
+        {% if user.is_authenticated %}
+          <a class="rounded-lg px-3 py-3 hover:bg-slate-900 hover:text-white" href="{% url 'maintenance:dashboard' %}">Dashboard</a>
+          <a class="rounded-lg px-3 py-3 hover:bg-slate-900 hover:text-white" href="{% url 'maintenance:vehicle-list' %}">Voertuigen</a>
+          <form method="post" action="{% url 'account_logout' %}">{% csrf_token %}<button class="w-full rounded-lg px-3 py-3 text-left hover:bg-slate-900 hover:text-white">Uitloggen</button></form>
+        {% else %}
+          <a class="rounded-lg bg-mint px-4 py-3 text-center font-semibold text-slate-950 hover:bg-emerald-300" href="{% url 'account_login' %}">Inloggen</a>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
+  {% if messages %}
+    <div class="mx-auto max-w-7xl px-6 pt-5">
+      {% for message in messages %}<div class="rounded-xl border border-emerald-400/30 bg-emerald-400/10 px-4 py-3 text-sm text-emerald-200">{{ message }}</div>{% endfor %}
+    </div>
+  {% endif %}
+  <main>{% block content %}{% endblock %}</main>
+  <footer class="mx-auto mt-20 max-w-7xl border-t border-slate-800 px-6 py-8 text-sm text-slate-500">Maintainers · Het onderhoudsdossier dat bij het voertuig blijft.</footer>
+  <script>
+    const mobileMenuButton = document.getElementById("mobile-menu-button");
+    const mobileMenu = document.getElementById("mobile-menu");
+    if (mobileMenuButton && mobileMenu) {
+      mobileMenuButton.addEventListener("click", () => {
+        const isOpen = mobileMenuButton.getAttribute("aria-expanded") === "true";
+        mobileMenuButton.setAttribute("aria-expanded", String(!isOpen));
+        mobileMenuButton.setAttribute("aria-label", isOpen ? "Navigatiemenu openen" : "Navigatiemenu sluiten");
+        mobileMenu.classList.toggle("hidden", isOpen);
+      });
+    }
+    const themeToggles = document.querySelectorAll(".theme-toggle");
+    const updateThemeControls = (theme) => {
+      const isLight = theme === "light";
+      document.querySelector('meta[name="theme-color"]').setAttribute("content", isLight ? "#f8fafc" : "#020617");
+      themeToggles.forEach((toggle) => {
+        toggle.setAttribute("aria-pressed", String(isLight));
+        toggle.setAttribute("aria-label", isLight ? "Donker thema inschakelen" : "Licht thema inschakelen");
+        const label = toggle.querySelector(".theme-toggle-label");
+        if (label) label.textContent = isLight ? "Donker thema" : "Licht thema";
+        const icon = toggle.querySelector(".theme-toggle-icon");
+        if (icon) icon.textContent = isLight ? "☾" : "☀";
+      });
+    };
+    updateThemeControls(document.documentElement.dataset.theme);
+    themeToggles.forEach((toggle) => {
+      toggle.addEventListener("click", () => {
+        const theme = document.documentElement.dataset.theme === "light" ? "dark" : "light";
+        document.documentElement.dataset.theme = theme;
+        try {
+          localStorage.setItem("maintainers-theme", theme);
+        } catch (error) {
+          // Keep the current theme for this page when storage is unavailable.
+        }
+        updateThemeControls(theme);
+      });
+    });
+  </script>
+</body>
+</html>

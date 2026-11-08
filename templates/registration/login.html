@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Inloggen · Maintainers{% endblock %}
+{% block content %}
+<section class="mx-auto max-w-md px-6 py-20">
+  <div class="rounded-2xl border border-slate-800 bg-slate-900 p-8 shadow-2xl shadow-black/20">
+    <p class="text-sm font-semibold uppercase tracking-widest text-mint">Welkom terug</p>
+    <h1 class="mt-3 text-3xl font-black">Inloggen</h1>
+    <form method="post" class="mt-8 space-y-5">
+      {% csrf_token %}
+      {% if form.non_field_errors %}
+        <div class="rounded-xl border border-rose-400/30 bg-rose-400/10 px-4 py-3 text-sm text-rose-200">
+          {{ form.non_field_errors }}
+        </div>
+      {% endif %}
+      <div>
+        <label for="{{ form.username.id_for_label }}" class="mb-2 block text-sm font-semibold text-slate-300">
+          E-mailadres of gebruikersnaam
+        </label>
+        <input
+          type="text"
+          name="{{ form.username.html_name }}"
+          id="{{ form.username.id_for_label }}"
+          value="{{ form.username.value|default:'' }}"
+          autocomplete="username"
+          autofocus
+          class="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-slate-100 outline-none transition placeholder:text-slate-600 focus:border-emerald-300 focus:ring-2 focus:ring-emerald-300/20"
+          {% if form.username.field.required %}required{% endif %}
+        >
+        {% for error in form.username.errors %}
+          <p class="mt-2 text-sm text-rose-300">{{ error }}</p>
+        {% endfor %}
+      </div>
+      <div>
+        <label for="{{ form.password.id_for_label }}" class="mb-2 block text-sm font-semibold text-slate-300">
+          Wachtwoord
+        </label>
+        <input
+          type="password"
+          name="{{ form.password.html_name }}"
+          id="{{ form.password.id_for_label }}"
+          autocomplete="current-password"
+          class="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-slate-100 outline-none transition placeholder:text-slate-600 focus:border-emerald-300 focus:ring-2 focus:ring-emerald-300/20"
+          {% if form.password.field.required %}required{% endif %}
+        >
+        {% for error in form.password.errors %}
+          <p class="mt-2 text-sm text-rose-300">{{ error }}</p>
+        {% endfor %}
+      </div>
+      {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+      <button type="submit" class="w-full rounded-xl bg-mint px-5 py-3 font-bold text-slate-950 transition hover:bg-emerald-300 focus:outline-none focus:ring-2 focus:ring-emerald-300 focus:ring-offset-2 focus:ring-offset-slate-900">
+        Inloggen
+      </button>
+    </form>
+    <p class="mt-5 text-center text-sm"><a class="font-semibold text-mint hover:text-emerald-300" href="{% url 'account_reset_password' %}">Wachtwoord vergeten?</a></p>
+  </div>
+</section>
+{% endblock %}
