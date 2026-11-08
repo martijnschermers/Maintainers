@@ -13,7 +13,13 @@ from .exports import (
     VehicleCsvExportView,
     VehiclePdfExportView,
 )
-from .transfers import PublicTransferView, TransferAcceptView, TransferCreateView
+from .transfers import (
+    PublicShareLinkView,
+    PublicTransferView,
+    ShareLinkCreateView,
+    TransferAcceptView,
+    TransferCreateView,
+)
 from .vehicles import (
     VehicleCreateView,
     VehicleDeleteView,
@@ -30,8 +36,10 @@ __all__ = [
     "MaintenanceEntryCreateView",
     "MaintenanceEntryDeleteView",
     "MaintenanceEntryUpdateView",
+    "PublicShareLinkView",
     "PublicTransferView",
     "RdwLookupView",
+    "ShareLinkCreateView",
     "TransferAcceptView",
     "TransferCreateView",
     "UserDataExportView",

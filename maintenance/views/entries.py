@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ValidationError
 from django.db import transaction
@@ -53,6 +54,7 @@ class MaintenanceEntryCreateView(LoginRequiredMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["vehicle"] = self.vehicle
+        context["invoice_analysis_enabled"] = settings.FEATURE_INVOICE_ANALYSIS_ENABLED
         context["part_formset"] = kwargs.get("part_formset") or PartUsedFormSet(
             instance=self.object, prefix="parts"
         )
@@ -110,6 +112,7 @@ class MaintenanceEntryUpdateView(MaintenanceEntryCreateView):
         context = super().get_context_data(**kwargs)
         context["vehicle"] = self.vehicle
         context["entry"] = self.entry
+        context["invoice_analysis_enabled"] = settings.FEATURE_INVOICE_ANALYSIS_ENABLED
         context["part_formset"] = kwargs.get("part_formset") or PartUsedFormSet(
             instance=self.entry, prefix="parts"
         )
@@ -129,6 +132,8 @@ class MaintenanceEntryDeleteView(LoginRequiredMixin, DeleteView):
 
 class InvoiceAnalysisView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
+        if not settings.FEATURE_INVOICE_ANALYSIS_ENABLED:
+            return JsonResponse({"error": "Factuuranalyse is momenteel niet beschikbaar."}, status=404)
         get_object_or_404(Vehicle, pk=kwargs["vehicle_id"], owner=request.user)
         uploaded_file = request.FILES.get("invoice_file")
         if uploaded_file is None:

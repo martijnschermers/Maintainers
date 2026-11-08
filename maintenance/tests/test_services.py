@@ -4,6 +4,7 @@ from unittest.mock import patch
 
 import pytest
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.test import override_settings
 from django.urls import reverse
 
 from ..models import MaintenanceEntry
@@ -91,6 +92,7 @@ def test_rdw_lookup_returns_vehicle_data(client, user):
 
 
 @pytest.mark.django_db
+@override_settings(FEATURE_INVOICE_ANALYSIS_ENABLED=True)
 def test_invoice_analysis_prefills_maintenance_fields(client, user, vehicle):
     client.force_login(user)
     line_item = SimpleNamespace(
@@ -139,6 +141,7 @@ def test_invoice_analysis_prefills_maintenance_fields(client, user, vehicle):
 
 
 @pytest.mark.django_db
+@override_settings(FEATURE_INVOICE_ANALYSIS_ENABLED=True)
 def test_invoice_analysis_does_not_use_personal_details_as_description(client, user, vehicle):
     client.force_login(user)
     document = SimpleNamespace(
@@ -177,6 +180,7 @@ def test_invoice_analysis_does_not_use_personal_details_as_description(client, u
 
 
 @pytest.mark.django_db
+@override_settings(FEATURE_INVOICE_ANALYSIS_ENABLED=True)
 def test_invoice_analysis_uses_parts_total_and_ignores_shipping(client, user, vehicle):
     client.force_login(user)
     def line_item(description, price):

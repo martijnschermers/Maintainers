@@ -3,6 +3,7 @@ from decimal import Decimal
 from hashlib import sha256
 
 import pytest
+from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.core import mail
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -10,7 +11,7 @@ from django.test import override_settings
 from django.urls import reverse
 from django.utils import timezone
 
-from ..models import Attachment, MaintenanceEntry, Ownership, Transfer, Vehicle
+from ..models import Attachment, MaintenanceEntry, Ownership, ShareLink, Transfer, Vehicle
 
 
 @pytest.mark.django_db
@@ -224,6 +225,28 @@ def test_maintenance_form_labels_are_in_dutch(client, user, vehicle):
     assert "Kilometerstand" in content
     assert "Uitgevoerd door" in content
     assert "Vertrouwensniveau" in content
+
+
+@pytest.mark.django_db
+def test_invoice_analysis_is_hidden_and_disabled_by_default(client, user, vehicle):
+    client.force_login(user)
+
+    form_response = client.get(reverse("maintenance:entry-create", args=[vehicle.pk]))
+    analysis_response = client.post(reverse("maintenance:invoice-analyze", args=[vehicle.pk]))
+
+    assert "Factuur analyseren" not in form_response.content.decode()
+    assert analysis_response.status_code == 404
+    assert analysis_response.json()["error"] == "Factuuranalyse is momenteel niet beschikbaar."
+
+
+@pytest.mark.django_db
+@override_settings(FEATURE_INVOICE_ANALYSIS_ENABLED=True)
+def test_invoice_analysis_can_be_enabled(client, user, vehicle):
+    client.force_login(user)
+
+    response = client.get(reverse("maintenance:entry-create", args=[vehicle.pk]))
+
+    assert "Factuur analyseren" in response.content.decode()
 
 
 @pytest.mark.django_db
@@ -523,6 +546,52 @@ def test_public_transfer_does_not_expose_private_entries(client, user, vehicle):
     assert response.status_code == 200
     assert public_entry.description in response.content.decode()
     assert private_entry.description not in response.content.decode()
+
+
+@pytest.mark.django_db
+def test_owner_can_create_a_read_only_share_link(client, user, vehicle):
+    client.force_login(user)
+
+    response = client.post(reverse("maintenance:share-create", args=[vehicle.pk]))
+
+    share_link = ShareLink.objects.get(vehicle=vehicle)
+    assert response.status_code == 302
+    message = "".join(str(message) for message in messages.get_messages(response.wsgi_request))
+    assert str(share_link.token) in message
+    assert f'href="http://testserver/share/{share_link.token}/"' in message
+
+
+@pytest.mark.django_db
+def test_share_link_exposes_only_public_entries_without_transfer_action(client, user, vehicle, entry):
+    public_entry = MaintenanceEntry.objects.create(
+        vehicle=vehicle,
+        created_by=user,
+        performed_on=date(2026, 1, 2),
+        odometer_km=250100,
+        category="oil",
+        description="Publieke onderhoudsbeurt",
+        performed_by="garage",
+        visibility="public",
+    )
+    share_link = ShareLink.objects.create(vehicle=vehicle, created_by=user)
+
+    response = client.get(reverse("maintenance:share-public", args=[share_link.token]))
+
+    content = response.content.decode()
+    assert response.status_code == 200
+    assert public_entry.description in content
+    assert entry.description not in content
+    assert "Dossier accepteren" not in content
+    assert "Account maken" in content
+
+
+@pytest.mark.django_db
+def test_inactive_share_link_is_not_available(client, user, vehicle):
+    share_link = ShareLink.objects.create(vehicle=vehicle, created_by=user, active=False)
+
+    response = client.get(reverse("maintenance:share-public", args=[share_link.token]))
+
+    assert response.status_code == 404
 
 
 @pytest.mark.django_db

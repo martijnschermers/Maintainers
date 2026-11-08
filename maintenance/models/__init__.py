@@ -1,6 +1,7 @@
 from .audit import AuditLog
 from .choices import FuelType, MaintenanceCategory, TrustLevel, VehicleType, Visibility
 from .entries import Attachment, MaintenanceEntry, PartUsed, Verification
+from .share_links import ShareLink
 from .transfers import Transfer
 from .vehicles import Ownership, Vehicle
 
@@ -12,6 +13,7 @@ __all__ = [
     "MaintenanceEntry",
     "Ownership",
     "PartUsed",
+    "ShareLink",
     "Transfer",
     "TrustLevel",
     "Vehicle",
