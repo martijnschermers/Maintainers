@@ -1,0 +1,13 @@
+repos:
+  - repo: local
+    hooks:
+      - id: collectstatic
+        name: Collect static files
+        entry: python manage.py collectstatic --noinput
+        language: system
+        pass_filenames: false
+      - id: pytest
+        name: Run tests
+        entry: pytest
+        language: system
+        pass_filenames: false
