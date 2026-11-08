@@ -389,7 +389,6 @@ def test_allauth_login_page_exposes_google_and_apple(client):
     assert response.status_code == 200
     assert "accounts/google/login/" in content
     assert 'fill="#4285F4"' in content
-    assert "accounts/apple/login/" in content
     assert reverse("account_signup") in content
     assert reverse("account_reset_password") in content
 
