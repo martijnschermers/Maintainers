@@ -11,15 +11,25 @@
       {% csrf_token %}
       {% if form.non_field_errors %}<div class="rounded-xl border border-rose-400/30 bg-rose-400/10 px-4 py-3 text-sm text-rose-200">{{ form.non_field_errors }}</div>{% endif %}
       {% for field in form %}
-        <div>
+        <div class="signup-field" data-field-name="{{ field.name }}">
           <label for="{{ field.id_for_label }}" class="mb-2 block text-sm font-semibold text-slate-300">{{ field.label }}</label>
-          {{ field }}
-          {% if field.help_text %}<p class="mt-2 text-xs leading-5 text-slate-500">{{ field.help_text }}</p>{% endif %}
-          {% for error in field.errors %}<p class="mt-2 text-sm text-rose-300">{{ error }}</p>{% endfor %}
+          {% if field.name == "username" %}
+            <input type="text" name="{{ field.html_name }}" id="{{ field.id_for_label }}" value="{{ field.value|default:'' }}" class="field" autocomplete="username" required>
+          {% elif field.name == "email" %}
+            <input type="email" name="{{ field.html_name }}" id="{{ field.id_for_label }}" value="{{ field.value|default:'' }}" class="field" autocomplete="email" required>
+          {% elif field.name == "password1" %}
+            <input type="password" name="{{ field.html_name }}" id="{{ field.id_for_label }}" value="{{ field.value|default:'' }}" class="field" autocomplete="new-password" minlength="8" required>
+          {% elif field.name == "password2" %}
+            <input type="password" name="{{ field.html_name }}" id="{{ field.id_for_label }}" class="field" autocomplete="new-password" minlength="8" required>
+          {% else %}
+            {{ field }}
+          {% endif %}
+          {% if field.help_text and field.name != "password1" and field.name != "password2" %}<p class="mt-2 text-xs leading-5 text-slate-500">{{ field.help_text }}</p>{% endif %}
+          {% for error in field.errors %}<p class="mt-2 flex items-start gap-2 text-sm text-rose-300" role="alert"><span aria-hidden="true">!</span><span>{{ error }}</span></p>{% endfor %}
         </div>
       {% endfor %}
       {% if redirect_field_value %}<input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}">{% endif %}
-      <button type="submit" class="w-full rounded-xl bg-mint px-5 py-3 font-bold text-slate-950 transition hover:bg-emerald-300">Account maken</button>
+      <button type="submit" class="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-mint px-5 py-3 font-bold text-slate-950 transition hover:bg-emerald-300"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path stroke-linecap="round" d="M15 20h4V4h-4M10 8l4 4-4 4M14 12H5"/></svg>Account maken</button>
     </form>
     <p class="mt-6 text-center text-sm text-slate-400">Heb je al een account? <a class="font-semibold text-mint hover:text-emerald-300" href="{% url 'account_login' %}">Inloggen</a></p>
   </div>
