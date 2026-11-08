@@ -19,7 +19,10 @@ class FuelType(models.TextChoices):
 
 
 class MaintenanceCategory(models.TextChoices):
-    OIL = "oil", "Olie en vloeistoffen"
+    OIL = "oil", "Oliebeurt"
+    BIG_SERVICE = "big_service", "Grote beurt"
+    SMALL_SERVICE = "small_service", "Kleine beurt"
+    APK = "apk", "APK"
     BRAKES = "brakes", "Remmen"
     TIRES = "tires", "Banden"
     ENGINE = "engine", "Motor"
@@ -33,7 +36,7 @@ class TrustLevel(models.TextChoices):
     SELF_REPORTED = "self_reported", "Zelf gerapporteerd"
     EVIDENCE = "evidence", "Met bewijs"
     REVIEWED = "reviewed", "Gecontroleerd"
-    THIRD_PARTY = "third_party", "Bevestigd door derde"
+    # THIRD_PARTY = "third_party", "Bevestigd door derde"
 
 
 class Visibility(models.TextChoices):
