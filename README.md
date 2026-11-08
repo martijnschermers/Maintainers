@@ -1,10 +1,13 @@
-# Maintainers
+# Maintainers - Flink Gevibed
 
 Het onderhoudsdossier dat bij het voertuig blijft.
 
+
+[![Maintainers preview](https://i.imgur.com/QMht7Jv.png)](https://imgur.com/a/RmHnPq5)
+
 ## Status
 
-Deze repository bevat de basis voor fase 0 van het implementatieplan:
+Deze repository bevat de huidige MVP-basis van het implementatieplan:
 
 - Django-monoliet met PostgreSQL-configuratie en lokale SQLite-fallback.
 - Eerste datamodel voor voertuigen, eigenaarshistorie, onderhoud, bewijs, verificatie,
@@ -14,21 +17,30 @@ Deze repository bevat de basis voor fase 0 van het implementatieplan:
 - Dashboard, onderhoudstijdlijn, onderhoud toevoegen, overdrachtslink en publieke
   alleen-lezen dossierweergave.
 - Accountloze, alleen-lezen deellinks voor gebruik in verkoopadvertenties.
-- AI-factuuranalyse is achter een feature flag beschikbaar en standaard uitgeschakeld.
-- Responsive TailwindCSS-styling via CDN voor landing page, dashboard en kernflows.
-- Inloggen en registreren via django-allauth met Google- en Apple-provider.
+- AI-factuuranalyse is achter de feature flag `FEATURE_INVOICE_ANALYSIS_ENABLED` beschikbaar
+  en standaard uitgeschakeld voor de MVP.
+- Responsive TailwindCSS-styling via CDN voor landing page, dashboard en kernflows, met
+  inline Heroicons voor belangrijke navigatie- en actieknoppen.
+- Inloggen en registreren via django-allauth; Google OAuth is voorbereid en zichtbaar in de
+  loginflow. De Apple-provider is geconfigureerd voor latere activering.
 - Foto's en facturen kunnen als PDF, JPEG, PNG of WebP aan onderhoudsentries worden toegevoegd;
   uploads worden server-side gevalideerd en voorzien van een SHA-256-hash.
 - RDW-kentekenopzoeking, Chart.js-statistieken, CSV/PDF-export, account-export,
   accountverwijdering en overdracht accepteren zijn beschikbaar.
-- Facturen kunnen met Google Document AI Invoice Parser worden geanalyseerd om het onderhoudsformulier voor te vullen;
-  de gebruiker controleert de voorgestelde gegevens altijd vóór het opslaan.
 - Django admin voor de handmatige validatiewachtrij.
 - Docker Compose voor lokale ontwikkeling en Dokku `app.json`.
-- CI voor checks, migraties, tests en linting.
+- CI voor checks, migraties, collectstatic, tests en linting.
+- Pre-commit hooks voor `collectstatic` en de volledige pytest-suite.
 
-De Google- en Apple-knoppen zijn technisch aangesloten. Vul de providergegevens in via `.env`
-voordat je OAuth gebruikt. Gebruik in de providerconsole deze callback-URL's:
+## Ontwikkelnotitie
+
+Dit project is grotendeels *gevibed*: de MVP is bijna volledig met hulp van AI-assistentie
+ontwikkeld, getest en iteratief verfijnd. De uiteindelijke configuratie, code-review,
+beveiliging en productie-inrichting blijven de verantwoordelijkheid van de maintainers.
+
+De Google-login is technisch aangesloten. De Apple-provider staat geconfigureerd, maar de
+Apple-login is nog niet zichtbaar in de huidige loginflow. Vul de providergegevens in via
+`.env` voordat je OAuth gebruikt. Gebruik in de providerconsole deze callback-URL's:
 
 - Google: `http://localhost:8000/accounts/google/login/callback/`
 - Apple: `http://localhost:8000/accounts/apple/login/callback/`
