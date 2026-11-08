@@ -13,6 +13,8 @@ Deze repository bevat de basis voor fase 0 van het implementatieplan:
   met eigenaar-afgeschermde querysets.
 - Dashboard, onderhoudstijdlijn, onderhoud toevoegen, overdrachtslink en publieke
   alleen-lezen dossierweergave.
+- Accountloze, alleen-lezen deellinks voor gebruik in verkoopadvertenties.
+- AI-factuuranalyse is achter een feature flag beschikbaar en standaard uitgeschakeld.
 - Responsive TailwindCSS-styling via CDN voor landing page, dashboard en kernflows.
 - Inloggen en registreren via django-allauth met Google- en Apple-provider.
 - Foto's en facturen kunnen als PDF, JPEG, PNG of WebP aan onderhoudsentries worden toegevoegd;
@@ -52,6 +54,10 @@ gcloud auth application-default set-quota-project JOUW_PROJECT_ID
 De processornaam mag ook rechtstreeks via `GOOGLE_DOCUMENT_AI_PROCESSOR_NAME` worden
 ingesteld. Deze heeft de vorm
 `projects/PROJECT_ID/locations/eu/processors/PROCESSOR_ID`.
+
+Zet `FEATURE_INVOICE_ANALYSIS_ENABLED=1` om de AI-factuuranalyse te activeren. De MVP kan
+deze instelling op `0` laten staan; facturen kunnen dan nog steeds als bewijsstuk worden
+geüpload.
 
 ### E-mail lokaal testen
 
@@ -134,4 +140,19 @@ python manage.py check
 python manage.py makemigrations --check --dry-run
 pytest
 ruff check .
+```
+
+### Pre-commit hooks
+
+Installeer de hooks eenmalig na het installeren van de requirements:
+
+```powershell
+pre-commit install
+```
+
+Bij elke commit worden de statische bestanden verzameld en draait de volledige test suite.
+Je kunt de hooks handmatig voor alle bestanden uitvoeren met:
+
+```powershell
+pre-commit run --all-files
 ```

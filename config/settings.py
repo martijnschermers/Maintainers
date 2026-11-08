@@ -113,6 +113,7 @@ EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "")
 EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS", "1") == "1"
 EMAIL_USE_SSL = os.getenv("EMAIL_USE_SSL", "0") == "1"
 DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", "noreply@localhost")
+FEATURE_INVOICE_ANALYSIS_ENABLED = os.getenv("FEATURE_INVOICE_ANALYSIS_ENABLED", "0") == "1"
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
