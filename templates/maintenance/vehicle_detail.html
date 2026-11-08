@@ -7,7 +7,7 @@
     <a href="{% url 'maintenance:vehicle-list' %}" class="text-sm text-slate-400 hover:text-white">← Alle voertuigen</a>
     <div class="mt-8 flex flex-col justify-between gap-6 md:flex-row md:items-end">
       <div><p class="text-xs font-bold uppercase tracking-[.25em] text-mint">{{ vehicle.get_vehicle_type_display }} / dossier</p><h1 class="mt-3 text-4xl font-black tracking-tight sm:text-5xl">{{ vehicle.make }} {{ vehicle.model }}</h1><div class="mt-4 flex flex-wrap items-center gap-3 text-sm text-slate-400">{% if vehicle.license_plate %}<span class="license-plate"><span class="license-plate-text">{{ vehicle.license_plate }}</span></span>{% else %}<span>GEEN KENTEKEN</span>{% endif %}<span>{{ vehicle.year|default:"Bouwjaar onbekend" }}</span></div></div>
-      <div class="flex flex-wrap gap-3"><a href="{% url 'maintenance:entry-create' vehicle.pk %}" class="btn-primary">+ Onderhoud</a><a href="{% url 'maintenance:transfer-create' vehicle.pk %}" class="btn-secondary">Overdragen</a><a href="{% url 'maintenance:vehicle-update' vehicle.pk %}" class="btn-secondary">Bewerken</a></div>
+      <div class="flex flex-wrap gap-3"><a href="{% url 'maintenance:entry-create' vehicle.pk %}" class="btn-primary">+ Onderhoud</a><form method="post" action="{% url 'maintenance:share-create' vehicle.pk %}">{% csrf_token %}<button class="btn-secondary" type="submit">Deellink maken</button></form><a href="{% url 'maintenance:transfer-create' vehicle.pk %}" class="btn-secondary">Overdragen</a><a href="{% url 'maintenance:vehicle-update' vehicle.pk %}" class="btn-secondary">Bewerken</a></div>
     </div>
   </div>
 </section>

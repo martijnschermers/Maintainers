@@ -5,10 +5,12 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect
+from django.urls import reverse
 from django.utils import timezone
+from django.utils.html import format_html
 from django.views.generic import DetailView, TemplateView, View
 
-from ..models import Ownership, Transfer, Vehicle
+from ..models import Ownership, ShareLink, Transfer, Vehicle
 
 
 class TransferCreateView(LoginRequiredMixin, TemplateView):
@@ -22,12 +24,58 @@ class TransferCreateView(LoginRequiredMixin, TemplateView):
             expires_at=timezone.now() + timedelta(days=14),
         )
         link = request.build_absolute_uri(f"/transfer/{transfer.token}/")
-        messages.success(request, f"Overdrachtslink aangemaakt: {link}")
+        messages.success(
+            request,
+            format_html(
+                'Overdrachtslink aangemaakt: <a class="text-mint underline" href="{0}">{0}</a>',
+                link,
+            ),
+        )
         return redirect("maintenance:vehicle-detail", pk=vehicle.pk)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["vehicle"] = get_object_or_404(Vehicle, pk=self.kwargs["pk"], owner=self.request.user)
+        return context
+
+
+class ShareLinkCreateView(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        vehicle = get_object_or_404(Vehicle, pk=kwargs["pk"], owner=request.user)
+        share_link, _ = ShareLink.objects.get_or_create(
+            vehicle=vehicle,
+            defaults={"created_by": request.user},
+        )
+        if not share_link.active:
+            share_link.active = True
+            share_link.created_by = request.user
+            share_link.save(update_fields=["active", "created_by"])
+        link = request.build_absolute_uri(reverse("maintenance:share-public", args=[share_link.token]))
+        messages.success(
+            request,
+            format_html(
+                'Deellink aangemaakt: <a class="text-mint underline" href="{0}">{0}</a>',
+                link,
+            ),
+        )
+        return redirect("maintenance:vehicle-detail", pk=vehicle.pk)
+
+
+class PublicShareLinkView(DetailView):
+    model = ShareLink
+    template_name = "maintenance/share_public.html"
+    context_object_name = "share_link"
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(
+            ShareLink.objects.select_related("vehicle"),
+            token=self.kwargs["token"],
+            active=True,
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["entries"] = self.object.vehicle.maintenance_entries.filter(visibility="public")
         return context
 
 
